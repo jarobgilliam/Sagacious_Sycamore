@@ -86,7 +86,7 @@ module.exports = {
         } else {
           //check level before anything else
           if (pet.experience > 5) {
-            pet.level = pet.level + 1;
+            pet.level = pet.level + 1 < 4 ? pet.level + 1 : pet.level;
             pet.experience = 0;
             postLog(user, name, 'leveled up');
           }
