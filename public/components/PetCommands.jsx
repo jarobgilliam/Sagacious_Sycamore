@@ -5,7 +5,7 @@ var PetCommand = (props) => (
     <img className='command' src={props.cmdImg.code} onClick={() => {props.executeCommand('codingButton')}}/>
     <img className='command' src={props.cmdImg.sleep} onClick={() => {props.executeCommand('sleeping')}}/>
     <img className='command' src={props.cmdImg.question} onClick={() => {props.executeCommand('question')}}/>
-    <a href='/game'><img className='command' src='../other/img/gude.png' /></a>
+    <a href='/game'><img className='command' src='../other/img/gude_big.png' /></a>
 
   </div>
 );

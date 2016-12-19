@@ -10,3 +10,7 @@ img {
   max-width: 100%;
   vertical-align: middle;
 }
+
+.command {
+	max-width: 15%;
+}
