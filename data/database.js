@@ -50,8 +50,8 @@ var Question = db.define('Questions', {
 
 //creates any missing tables
 //pass in {force: true} to clear tables
-User.sync({force: true});
-Pet.sync({force: true});
+User.sync();
+Pet.sync();
 Log.sync();
 Question.sync();
 
