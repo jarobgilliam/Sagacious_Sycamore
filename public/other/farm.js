@@ -10,7 +10,7 @@ canvas.width = 400;
 
 var imgSources = {
 	water: 'http://www.clipartbest.com/cliparts/acq/b4G/acqb4GgcM.png',
-	cat: 'other/img/cat.png', // http://piq.codeus.net/static/media/userpics/piq_266550_400x400.png
+	cat: 'other/img/gude.png', // http://piq.codeus.net/static/media/userpics/piq_266550_400x400.png
 	invCoin: '/other/img/invCoin.png',
 	thirstCoin: '/other/img/thirstCoin.png',
 	meteor: '/other/img/meteor.png',

@@ -1,6 +1,7 @@
 body {
 	margin-left: auto;
 	margin-right: auto;
+	cursor: url('other/img/gude.png'), default;
 }
 
 img {

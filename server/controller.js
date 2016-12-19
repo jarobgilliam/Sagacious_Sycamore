@@ -34,22 +34,30 @@ var urls = {
   lvl3: lvl3
 };
 
+var randomName = function() {
+  // produces a random pet name. 
+  var first = ['Bo', 'Di', 'Fru', 'Ga', 'Mo', 'Dee', 'Soo', 'Joo', 'Mi', 'La'];
+  var middle = ['dug', 'lon', 'fin', 'set', 'bug', 'rud', 'din'];
+  var last = ['ing', 'ly', 'na', 'mu', 'apu', 'arino', ' the Powerful', 'the Lamb'];
+
+  var name = first[~~(Math.random() * first.length)] + middle[~~(Math.random() * middle.length)];
+  name += last[~~(Math.random() * last.length)];
+
+  return name;
+}
+
 module.exports = {
   /********** Pet Functions **********/
   get: function(req, res, next) {
     Pet.findOne({where: {user: req.session.user}})
       .then(function(query) {
         if (query) {
-          console.log('GET:', req.session.user);
           var pet = query.dataValues;
           res.statusCode = 200;
-          console.log('found Pet, current User', req.session.user);
           res.json(pet);
         } else {
-          Pet.create({ user: req.session.user, name: 'newPetOf' + req.session.user})
+          Pet.create({ user: req.session.user, name: randomName()})
           .then(function(pet) {
-            console.log('Created new pet.', 'Name: ', pet.dataValues.name, 'User: ', pet.dataValues.user);
-            console.log('current User', req.session.user);
             res.send(pet.dataValues);
           });            
         }
@@ -61,27 +69,22 @@ module.exports = {
         if (pet) {
           var newStatus = req.body.status;
           pet.status = newStatus;
-          console.log('url', urls['lvl'+ pet.level][newStatus]);
           pet.img = urls['lvl'+ pet.level][newStatus];
           pet.save().then(function(data) {
-            console.log('updated status');
             res.statusCode = 201;
             res.end(JSON.stringify(data.dataValues));
           });
         } else {
-          console.log('no pets found!');
         }
       });
   },
   new: function(req, res, next) {
     var name = req.body.name;
     var user = req.session.user;
-    console.log('new', user);
     Pet.destroy({ where: {user: user}});
     Log.destroy({ where: {user: user} });
     Pet.create({ user: user, name: name})
       .then(function(pet) {
-        console.log('Created new pet.', 'Name: ', pet.dataValues.name, 'User: ', pet.dataValues.user);
         res.send("success");
       });
   },
@@ -92,7 +95,6 @@ module.exports = {
         // Pull a random question
         var randomChoice = ~~(Math.random() * questions.length);
         var question = questions[randomChoice];
-        console.log('question', question.question);
         question.answer = 0; // Hide the answer until user submites answer
         res.statusCode = 200;
         res.send(question);
@@ -155,12 +157,10 @@ module.exports = {
       if(entry.length === 0){
         Log.create({name: name, action: action, user: user})
         .then(function(log) {
-          console.log('Created new log.');
         });
       } else if(entry[0].dataValues.action !== 'dead'){
         Log.create({name: name, action: action, user: user})
         .then(function(log) {
-          console.log('Created new log.');
         });
       }
     })
@@ -176,21 +176,17 @@ module.exports = {
           user = user.dataValues;
           bcrypt.compare(password, user.password, function(err, match) {
             if (err) {
-              console.log('error')
               throw err;
             } else if (match) {
-              console.log('Login successful', req.session);
               req.session.regenerate(function() {
                 req.session.user = user.username;
                 res.send(req.session);
               });
             } else {
-              console.log('Wrong password.');
               res.send(req.session.user);
             }
           })
         } else {
-          console.log('Username not found.');
           res.send(req.session.user);
         }
       })
@@ -215,7 +211,6 @@ module.exports = {
                   throw err;
                 } else {
                   User.create({username: username, password: hash}).then(function(user) {
-                    console.log('Saved user.');
                     user = user.dataValues;
                     req.session.regenerate(function() {
                       req.session.user = user.username;
@@ -227,7 +222,6 @@ module.exports = {
             }
           })
         } else {
-          console.log('Account already exists.');
           res.send(false);
         }
       });
@@ -235,7 +229,6 @@ module.exports = {
   /********** Authentication Middleware **********/
   checkUser: function(req, res, next) {
     if (!req.session.user) {
-      console.log('Must login.');
       res.redirect('/login');
     } else {
       next();
@@ -247,10 +240,8 @@ module.exports = {
 
   // returns all monsters in an array
   getPets: function(req, res, next) {
-    console.log('get pets is running');
     Pet.findAll({})
       .then(function(pets) {
-        console.log('This is what was found:', pets);
         res.statusCode = 200;
         res.send(pets);
       });
